@@ -15,7 +15,7 @@ public class Main {
                 "Local (2 joueurs, meme ecran)",
                 "En ligne : creer une partie (code)",
                 "En ligne : rejoindre avec un code",
-                "Avance : connexion directe par IP (1heberger)",
+                "Avance : connexion directe par IP (heberger)",
                 "Avance : connexion directe par IP (rejoindre)"};
         int mode = JOptionPane.showOptionDialog(null, "Mode de jeu ?", "FGES Morpion",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, choix, choix[0]);
