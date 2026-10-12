@@ -14,8 +14,9 @@ public class Actions {
 
     private static void reinitialiser(Grille g) {
         System.out.println(" RESET ");
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
+        int n = g.getTaille();
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
                 JButton b = g.getLesBoutons()[i][j];
                 b.setText("");
                 b.setSelected(false);

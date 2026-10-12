@@ -1,6 +1,7 @@
 package TP4.view;
 
 import TP4.control.Actions;
+import TP4.model.Joueurs;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,15 +14,14 @@ public class Fenetre extends JFrame implements ActionListener {
     private int largeur;
     private int hauteur;
     private Grille laGrille;
-    private Score leScoreRouge;
-    private Score leScoreJaune;
+    private Score[] lesScores;
     private JButton reset;
     private JPanel panneauJoueur;
     private JLabel labelJoueur;
     private char monRole = '?';
     private java.awt.Image logo;
 
-    public Fenetre(int W, int H) {
+    public Fenetre(int W, int H, int nbJoueurs) {
         this.largeur = W;
         this.hauteur = H;
         setSize(W, H);
@@ -57,13 +57,21 @@ public class Fenetre extends JFrame implements ActionListener {
         });
         setLayout(new BorderLayout());
 
-        laGrille = new Grille(this);
+        laGrille = new Grille(this, nbJoueurs);
         this.add(laGrille, BorderLayout.CENTER);
 
-        leScoreRouge = new Score(1);
-        leScoreJaune = new Score(2);
-        this.add(leScoreRouge, BorderLayout.WEST);
-        this.add(leScoreJaune, BorderLayout.EAST);
+        // scores : joueurs pairs a gauche (rouge, vert), impairs a droite (jaune, bleu)
+        lesScores = new Score[nbJoueurs];
+        JPanel gauche = new JPanel(new GridLayout(nbJoueurs / 2, 1));
+        JPanel droite = new JPanel(new GridLayout(nbJoueurs / 2, 1));
+        gauche.setOpaque(false);
+        droite.setOpaque(false);
+        for (int k = 0; k < nbJoueurs; k++) {
+            lesScores[k] = new Score(Joueurs.COULEURS[k]);
+            (k % 2 == 0 ? gauche : droite).add(lesScores[k]);
+        }
+        this.add(gauche, BorderLayout.WEST);
+        this.add(droite, BorderLayout.EAST);
 
         reset = new JButton("RESET");
         reset.addActionListener(this);
@@ -84,10 +92,10 @@ public class Fenetre extends JFrame implements ActionListener {
         });
     }
 
-    /** Colorie le bandeau nord selon le joueur qui doit jouer ('X' = rouge, 'O' = jaune). */
+    /** Colorie le bandeau nord selon le joueur qui doit jouer (couleur de son symbole). */
     public void afficherJoueur(char xo) {
-        String qui = (xo == 'X') ? "ROUGE" : "JAUNE";
-        panneauJoueur.setBackground(xo == 'X' ? Color.red : Color.yellow);
+        String qui = Joueurs.nom(xo);
+        panneauJoueur.setBackground(Joueurs.COULEURS[Joueurs.indice(xo)]);
         if (monRole == '?') labelJoueur.setText("JOUEUR " + qui + ", JOUEZ");
         else if (monRole == xo) labelJoueur.setText("A VOUS DE JOUER (" + qui + ")");
         else labelJoueur.setText("TOUR DE L'ADVERSAIRE (" + qui + ")");
@@ -98,7 +106,7 @@ public class Fenetre extends JFrame implements ActionListener {
         labelJoueur.setText(message);
     }
 
-    /** Role en ligne : 'X' (rouge), 'O' (jaune), '?' = partie locale. */
+    /** Role en ligne : symbole du joueur (voir Joueurs), '?' = partie locale. */
     public void setMonRole(char role) { this.monRole = role; }
 
     public void afficherFinDePartie() {
@@ -107,8 +115,8 @@ public class Fenetre extends JFrame implements ActionListener {
     }
 
     public Grille getLaGrille() { return laGrille; }
-    public Score getScoreRouge() { return leScoreRouge; }
-    public Score getScoreJaune() { return leScoreJaune; }
+    /** Score du joueur d'indice k (voir Joueurs). */
+    public Score getScore(int k) { return lesScores[k]; }
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {

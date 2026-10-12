@@ -15,7 +15,7 @@ public class Reseau {
         void deconnecte();
     }
 
-    private final char role;
+    private char role;
     protected final Recepteur recepteur;
     private Socket socket;
     private PrintWriter out;
@@ -27,6 +27,7 @@ public class Reseau {
     }
 
     public char getRole() { return role; }
+    protected void setRole(char role) { this.role = role; }
     public boolean isConnecte() { return connecte; }
 
     /** Attend un adversaire en arriere-plan, puis appelle surConnexion (dans l'EDT). */

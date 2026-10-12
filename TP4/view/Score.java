@@ -8,10 +8,9 @@ public class Score extends JPanel {
     private JLabel leScore;
     public static Font mafaconDecrire = new Font("TimesRoman", Font.BOLD, 60);
 
-    public Score(int couleur) {
+    public Score(Color couleur) {
         leScore = new JLabel("" + valeur);
-        if (couleur == 1) leScore.setForeground(Color.red);
-        else leScore.setForeground(Color.yellow);
+        leScore.setForeground(couleur);
         leScore.setFont(mafaconDecrire);
         this.setOpaque(false);
         this.add(leScore);
